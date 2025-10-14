@@ -1,14 +1,14 @@
 import 'package:linkfy_text/src/enum.dart';
 
-// String urlRegExp =
-
-// url regex that accept https, http, www
 String urlRegExp =
-    r'((https?://)?(www\.)?[a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*))';
+    r'\b((https?:\/\/)?(www\.)?(((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9]?[0-9])|([a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,6}|localhost)(:(6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|[1-5]?\d{1,4}))?((\/[-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)?(\?[^\s]*)?)?)\b';
 
-String hashtagRegExp = r'#[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
+String hashtagRegExp =
+    r'#[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
 
-String userTagRegExp = r'@[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
+String userTagRegExp =
+    r'@[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
+
 String phoneRegExp =
     r'\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*';
 String emailRegExp =

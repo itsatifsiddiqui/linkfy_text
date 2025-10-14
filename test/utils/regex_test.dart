@@ -20,6 +20,11 @@ void main() {
     const urls = [
       "http://domain.com",
       "http://domain.com/",
+      "http://192.168.8.2:9990",
+      "http://localhost:8080",
+      "https://localhost:8080?hsh=123&q=hello",
+      'http://localhost',
+      "https://localhost:8080",
       "https://domain.com",
       "https://domain.com/",
       "https://www.domain.com",
@@ -29,6 +34,10 @@ void main() {
       "https://domain.com/Google?param=",
       "https://domain.com/Google?param=helloworld",
       "https://sub.domain.com/Google?param=helloworld#hash",
+       "https://my-domain.com",
+      "http://my-awesome-website.com",
+      "www.my-site-with-hyphens.com",
+      "https://sub-domain.example.com"
     ];
 
     const hashtags = [
