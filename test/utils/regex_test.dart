@@ -70,15 +70,19 @@ void main() {
       // UK mobile
       "+44 7911 123456",
       "+447911123456",
+      "+44.7911.123456",
       "07911 123456",
       "07911123456",
       "0791 112 3456",
+      "07700 900123",
       "44 7911 123456",
       // UK London landline
       "020 7946 0958",
       "02079460958",
       "+44 20 7946 0958",
       "+442079460958",
+      "020-7946-0958",
+      "020.7946.0958",
       // UK other landlines
       "0121 496 0123",
       "0113 496 0123",
@@ -102,6 +106,8 @@ void main() {
       "1-800-555-1234",
       "555.123.4567",
       "555 123 4567",
+      "+1(555)123-4567",
+      "+15551234567",
     ];
 
     const pkPhoneNums = [
@@ -110,6 +116,10 @@ void main() {
       "+92 345 664 3045",
       "+923456643045",
       "0300-1234567",
+      "0300 1234567",
+      "+92 300 123 4567",
+      "0321-1234567",
+      "03211234567",
     ];
 
     const singleDigitAreaCodes = [
@@ -217,6 +227,51 @@ void main() {
     test("IP addresses should match as URL, not phone", () {
       const ip = "192.168.1.1";
       expect(getMatchedType(ip), equals(LinkType.url));
+    });
+
+    test("Phone regex should not match across newlines", () {
+      final regex = constructRegExpFromLinkType([
+        LinkType.url, LinkType.phone,
+      ]);
+      final text = "07911 123456\n020 7946 0958\n0345-6643045\n0300-1234567";
+      final matches = regex.allMatches(text).toList();
+
+      for (final m in matches) {
+        expect(m.group(0)!.contains('\n'), isFalse,
+            reason: 'Cross-line match: "${m.group(0)}"');
+      }
+      expect(matches.length, equals(4));
+      expect(matches[0].group(0), equals('07911 123456'));
+      expect(matches[1].group(0), equals('020 7946 0958'));
+      expect(matches[2].group(0), equals('0345-6643045'));
+      expect(matches[3].group(0), equals('0300-1234567'));
+    });
+
+    test("Phones in sentences should match correctly", () {
+      final regex = constructRegExpFromLinkType([LinkType.url, LinkType.phone]);
+
+      final match1 = regex.allMatches('Call us on 07911 123456 for info');
+      expect(match1.first.group(0), equals('07911 123456'));
+
+      final match2 = regex.allMatches('Our landline is 020 7946 0958 thanks');
+      expect(match2.first.group(0), equals('020 7946 0958'));
+    });
+
+    test("URLs with digits should not match as phone", () {
+      expect(getMatchedType('https://example.com/order/5551234567'),
+          equals(LinkType.url));
+      expect(getMatchedType('https://example.com/phone=03456643045'),
+          equals(LinkType.url));
+    });
+
+    test("Phone right after URL should both work independently", () {
+      final regex = constructRegExpFromLinkType([LinkType.url, LinkType.phone]);
+      final text = 'Visit https://example.com or call 07911 123456';
+      final matches = regex.allMatches(text).toList();
+      expect(matches.length, equals(2));
+      final types = matches.map((m) => getMatchedType(m.group(0)!)).toList();
+      expect(types, contains(LinkType.url));
+      expect(types, contains(LinkType.phone));
     });
 
     test(
