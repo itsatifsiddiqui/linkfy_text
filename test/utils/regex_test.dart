@@ -63,7 +63,63 @@ void main() {
       "(111)222 3333",
       "+5444333222",
       "+91 (123) 456-7890",
-      "123-456-7890"
+      "123-456-7890",
+    ];
+
+    const ukPhoneNums = [
+      // UK mobile
+      "+44 7911 123456",
+      "+447911123456",
+      "07911 123456",
+      "07911123456",
+      "0791 112 3456",
+      "44 7911 123456",
+      // UK London landline
+      "020 7946 0958",
+      "02079460958",
+      "+44 20 7946 0958",
+      "+442079460958",
+      // UK other landlines
+      "0121 496 0123",
+      "0113 496 0123",
+      "+44 121 496 0123",
+      "+44 113 496 0123",
+      // UK freephone / special
+      "0800 123 4567",
+      "08001234567",
+      "0808 123 4567",
+      "+44 800 123 4567",
+      "0300 123 4567",
+      "0345 123 4567",
+    ];
+
+    const usPhoneNums = [
+      "555-123-4567",
+      "(555) 123-4567",
+      "+1 555 123 4567",
+      "5551234567",
+      "+1-555-123-4567",
+      "1-800-555-1234",
+      "555.123.4567",
+      "555 123 4567",
+    ];
+
+    const pkPhoneNums = [
+      "03456643045",
+      "0345-6643045",
+      "+92 345 664 3045",
+      "+923456643045",
+      "0300-1234567",
+    ];
+
+    const notPhoneNums = [
+      "2.0.1",
+      "10.3.4",
+      "1.2.3.4",
+      "19.99",
+      "123",
+      "12345",
+      "2024-06-01",
     ];
 
     ///
@@ -98,6 +154,52 @@ void main() {
         expect(RegExp(phoneRegExp).hasMatch(phone), isTrue);
         expect(getMatchedType(phone), equals(LinkType.phone));
       }
+    });
+
+    test("Should match UK phone numbers", () {
+      for (final phone in ukPhoneNums) {
+        expect(RegExp(phoneRegExp).hasMatch(phone), isTrue,
+            reason: 'Failed to match UK phone: $phone');
+        expect(getMatchedType(phone), equals(LinkType.phone),
+            reason: 'Failed getMatchedType for UK phone: $phone');
+      }
+    });
+
+    test("Should match US phone numbers", () {
+      for (final phone in usPhoneNums) {
+        expect(RegExp(phoneRegExp).hasMatch(phone), isTrue,
+            reason: 'Failed to match US phone: $phone');
+        expect(getMatchedType(phone), equals(LinkType.phone),
+            reason: 'Failed getMatchedType for US phone: $phone');
+      }
+    });
+
+    test("Should match Pakistani phone numbers", () {
+      for (final phone in pkPhoneNums) {
+        expect(RegExp(phoneRegExp).hasMatch(phone), isTrue,
+            reason: 'Failed to match PK phone: $phone');
+        expect(getMatchedType(phone), equals(LinkType.phone),
+            reason: 'Failed getMatchedType for PK phone: $phone');
+      }
+    });
+
+    test("Should NOT match non-phone strings as phone", () {
+      final phoneRegex = RegExp(phoneRegExp);
+      for (final text in notPhoneNums) {
+        final match = phoneRegex.firstMatch(text);
+        // If regex matches, the match should not cover the full string
+        // (i.e., only a substring matched, not the intended text)
+        if (match != null) {
+          // Ensure it doesn't match the entire string as a phone number
+          expect(match.group(0) == text, isFalse,
+              reason: 'Full false positive phone match: $text');
+        }
+      }
+    });
+
+    test("IP addresses should match as URL, not phone", () {
+      const ip = "192.168.1.1";
+      expect(getMatchedType(ip), equals(LinkType.url));
     });
 
     test(

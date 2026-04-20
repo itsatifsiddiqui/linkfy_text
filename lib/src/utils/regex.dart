@@ -10,7 +10,17 @@ String userTagRegExp =
     r'@[a-zA-Z\u00C0-\u01B4\w_\u1EA0-\u1EF9!$%^&]{1,}(?=\s|$)';
 
 String phoneRegExp =
-    r'\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*';
+    // International with + country code
+    r'\+\d{1,3}[-.\s]?\(?\d{2,6}\)?[-.\s]?\d{2,6}(?:[-.\s]?\d{1,6}){0,2}'
+    r'|'
+    // Trunk prefix (0XX...) for UK, PK, etc.
+    r'0\d{2,4}[-.\s]?\d{3,8}(?:[-.\s]?\d{3,6})?'
+    r'|'
+    // Country code without + (requires separators between groups)
+    r'\d{2,3}[-.\s]\d{3,6}[-.\s]\d{3,6}(?:[-.\s]\d{1,6})?'
+    r'|'
+    // US-style 3-3-4 with optional country code
+    r'(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?';
 String emailRegExp =
     r"([a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+)";
 
