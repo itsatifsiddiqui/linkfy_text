@@ -140,6 +140,13 @@ void main() {
       "2024-06-01",
     ];
 
+    const shortPlusNotPhone = [
+      "+425",
+      "+1234",
+      "+12 34",
+      "+1 2 3",
+    ];
+
     ///
     test("Should match all emails", () {
       for (final email in emails) {
@@ -221,6 +228,29 @@ void main() {
           expect(match.group(0) == text, isFalse,
               reason: 'Full false positive phone match: $text');
         }
+      }
+    });
+
+    test("Short + numbers should NOT match as phone", () {
+      final phoneRegex = RegExp(phoneRegExp);
+      for (final text in shortPlusNotPhone) {
+        final match = phoneRegex.firstMatch(text);
+        if (match != null) {
+          expect(match.group(0) == text, isFalse,
+              reason: 'False positive phone match: $text');
+        }
+      }
+    });
+
+    test("Version/build strings with + should NOT match as phone", () {
+      final regex = constructRegExpFromLinkType([
+        LinkType.url, LinkType.phone,
+      ]);
+      final text = 'build 0.7.9 +425';
+      final matches = regex.allMatches(text).toList();
+      for (final m in matches) {
+        expect(m.group(0), isNot(equals('+425')),
+            reason: '"+425" in build string matched as phone');
       }
     });
 
