@@ -112,6 +112,14 @@ void main() {
       "0300-1234567",
     ];
 
+    const singleDigitAreaCodes = [
+      "+44 (0) 7911 123456", // UK trunk in parens
+      "+81 3 1234 5678", // Japan Tokyo
+      "+61 2 1234 5678", // Australia Sydney
+      "+82 2 1234 5678", // South Korea Seoul
+      "+33 1 23 45 67 89", // France (5 groups of 2)
+    ];
+
     const notPhoneNums = [
       "2.0.1",
       "10.3.4",
@@ -180,6 +188,15 @@ void main() {
             reason: 'Failed to match PK phone: $phone');
         expect(getMatchedType(phone), equals(LinkType.phone),
             reason: 'Failed getMatchedType for PK phone: $phone');
+      }
+    });
+
+    test("Should match international numbers with single-digit area codes", () {
+      for (final phone in singleDigitAreaCodes) {
+        expect(RegExp(phoneRegExp).hasMatch(phone), isTrue,
+            reason: 'Failed to match: $phone');
+        expect(getMatchedType(phone), equals(LinkType.phone),
+            reason: 'Failed getMatchedType for: $phone');
       }
     });
 

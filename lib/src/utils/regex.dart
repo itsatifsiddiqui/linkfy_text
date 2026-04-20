@@ -11,7 +11,7 @@ String userTagRegExp =
 
 String phoneRegExp =
     // International with + country code
-    r'\+\d{1,3}[-.\s]?\(?\d{2,6}\)?[-.\s]?\d{2,6}(?:[-.\s]?\d{1,6}){0,2}'
+    r'\+\d{1,3}[-.\s]?\(?\d{1,6}\)?[-.\s]?\d{1,6}(?:[-.\s]?\d{1,6}){0,3}'
     r'|'
     // Trunk prefix (0XX...) for UK, PK, etc.
     r'0\d{2,4}[-.\s]?\d{3,8}(?:[-.\s]?\d{3,6})?'
